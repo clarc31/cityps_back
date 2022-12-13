@@ -4,18 +4,21 @@ var router = express.Router();
 //
 require('../models/connection');
 const User = require('../models/users');
-// const { checkBody } = require('../modules/checkBody');
+const { checkBody } = require('../modules/checkBody');
 const bcrypt = require('bcrypt');
 const uid2 = require('uid2');
 
+// ---------------------------------------------- route user/signup ----------------------------------------------
 router.post('/signup', (req, res) => {
-/*
-// Vérifier que les champs de saisie ont été remplis correctement --- quid de la photo qui ne serait pas enregistrée tt de suite ?? 
-  if (!checkBody(req.body, ['firstName', 'username', 'password'])) {
+
+  // Vérifier que les champs de saisie ont été remplis correctement --- quid de la photo qui ne serait pas enregistrée tt de suite ?? 
+  
+  if (!checkBody(req.body, ['name','firstname', 'username', 'email', 'password', 'categories'])) {
     res.json({ result: false, error: 'Missing or empty fields' });
     return;
   }
-*/
+  
+
   // Enregistrement réalisé si pas d'existence de l'email ds la bdd
   User.findOne({email: {$regex : new RegExp(req.body.email, 'i')}}).then(data => {
     console.log(data)
@@ -48,6 +51,41 @@ router.post('/signup', (req, res) => {
   })
 
 })
+
+// ---------------------------------------------- route user/signin ----------------------------------------------
+router.post('/signin', (req, res) => {
+  if (!checkBody(req.body, ['email', 'password'])) {
+    res.json({ result: false, error: 'Missing or empty fields' });
+    return;
+  }
+
+  User.findOne({ email: req.body.email }).then(data => {
+    if (data && bcrypt.compareSync(req.body.password, data.password)) {
+      res.json({ 
+        result: true, 
+        token: data.token, 
+        userId: data._id, 
+        username: data.username,
+        categories: data.categories,
+        albums: data.albums
+      });
+    } else {
+      res.json({ result: false, error: 'User not found or wrong password' });
+    }
+  });
+});
+
+
+// ---------------------------------------------- route user ----------------------------------------------
+router.get('/', (req, res) => {
+  User.findOne({ token: req.body.token }).then(data => {
+    if (data) {
+      res.json({ result: true, data: data});
+    } else {
+      res.json({ result: false, error: 'User not found' });
+    }
+  });
+});
 
 /*
     name : String,
