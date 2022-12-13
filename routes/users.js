@@ -18,6 +18,7 @@ router.post('/signup', (req, res) => {
 */
   // Enregistrement réalisé si pas d'existence de l'email ds la bdd
   User.findOne({email: {$regex : new RegExp(req.body.email, 'i')}}).then(data => {
+    console.log(data)
     if (data === null) {
       const hash = bcrypt.hashSync(req.body.password, 10);
 
@@ -32,8 +33,8 @@ router.post('/signup', (req, res) => {
         email : req.body.email,
         token : uid2(32),
         password : hash,
-        inscriptionDate : Date.now,
-        categories : req.body.body,
+        inscriptionDate : Date.now(),
+        categories : req.body.categories,
         albums : [{name : 'My postyps', typs: []}],
       });
 

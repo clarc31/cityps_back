@@ -1,0 +1,74 @@
+[
+    {
+      "_id": {
+        "$oid": "625ea9ca38d6a37769946a01"
+      },
+      "category": "Activités pour les enfants"
+    },
+    {
+      "_id": {
+        "$oid": "625ea9ca38d6a37769946a02"
+      },
+      "category": "Patrimoine historique"
+    },
+    {
+        "_id": {
+          "$oid": "625ea9ca38d6a37769946a03"
+        },
+        "category": "Musées, galeries, expositions"
+    },
+    {
+        "_id": {
+          "$oid": "625ea9ca38d6a37769946a04"
+        },
+        "category": "Cuisines, produits du terroir"
+    },
+    {
+        "_id": {
+          "$oid": "625ea9ca38d6a37769946a05"
+        },
+        "category": "Sorties en nature"
+    },
+    {
+        "_id": {
+          "$oid": "625ea9ca38d6a37769946a06"
+        },
+        "category": "Activités sportives"
+    },
+    {
+        "_id": {
+          "$oid": "625ea9ca38d6a37769946a07"
+        },
+        "category": "Loisirs créatifs"
+    },
+    {
+        "_id": {
+          "$oid": "625ea9ca38d6a37769946a08"
+        },
+        "category": "Loisirs culturels"
+    },
+    {
+        "_id": {
+          "$oid": "625ea9ca38d6a37769946a09"
+        },
+        "category": "Idées de sorties"
+    },
+    {
+        "_id": {
+          "$oid": "625ea9ca38d6a37769946a10"
+        },
+        "category": "Spectacles"
+    },
+    {
+        "_id": {
+          "$oid": "625ea9ca38d6a37769946a11"
+        },
+        "category": "Parc d'attraction, à thème"
+    },
+    {
+        "_id": {
+          "$oid": "625ea9ca38d6a37769946a12"
+        },
+        "category": "Activités Bien-être"
+    }
+]
