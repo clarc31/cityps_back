@@ -13,7 +13,7 @@ const albumSchema = mongoose.Schema({
 
 const userSchema = mongoose.Schema({
 	name : String,
-    firstName : String,
+    firstname : String,
 	photo : String,
     username : String,
 	email: String,
