@@ -10,6 +10,10 @@ const uid2 = require('uid2');
 
 // ---------------------------------------------- route user/signup ----------------------------------------------
 router.post('/signup', (req, res) => {
+  // console.log('backend test',req);
+  console.log('req.body',req.body);
+  console.log('req.files',req.files);
+
 
   // Vérifier que les champs de saisie ont été remplis correctement --- quid de la photo qui ne serait pas enregistrée tt de suite ?? 
   
@@ -17,27 +21,32 @@ router.post('/signup', (req, res) => {
     res.json({ result: false, error: 'Missing or empty fields' });
     return;
   }
+
+  const {name, firstname, username, email, password, categories} = req.body;
+
+  const categoriesArray = categories.split(',')
   
 
+  console.log("categoriesArray", categoriesArray)
   // Enregistrement réalisé si pas d'existence de l'email ds la bdd
   User.findOne({email: {$regex : new RegExp(req.body.email, 'i')}}).then(data => {
     console.log(data)
     if (data === null) {
-      const hash = bcrypt.hashSync(req.body.password, 10);
+      const hash = bcrypt.hashSync(password, 10);
 
       // Photo : uri transmis par BE //
 
       // --------------------------- //
       const newUser = new User({
-        name: req.body.name,
-        firstname : req.body.firstname,
-        photo : req.body.photo,
-        username : req.body.username,
-        email : req.body.email,
+        name: name,
+        firstname : firstname,
+        // photo : req.body.photo,
+        username : username,
+        email : email,
         token : uid2(32),
         password : hash,
         inscriptionDate : Date.now(),
-        categories : req.body.categories,
+        categories : categoriesArray,
         albums : [{name : 'My postyps', typs: []}],
       });
 
@@ -78,6 +87,7 @@ router.post('/signin', (req, res) => {
 
 // ---------------------------------------------- route user ----------------------------------------------
 router.get('/', (req, res) => {
+  // console.log('yyyyyy',req.body)
   User.findOne({ token: req.body.token }).then(data => {
     if (data) {
       res.json({ result: true, data: data});
