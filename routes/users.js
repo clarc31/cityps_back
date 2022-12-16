@@ -7,13 +7,15 @@ const User = require('../models/users');
 const { checkBody } = require('../modules/checkBody');
 const bcrypt = require('bcrypt');
 const uid2 = require('uid2');
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
+const uniqid = require('uniqid');
 
 // ---------------------------------------------- route user/signup ----------------------------------------------
-router.post('/signup', (req, res) => {
+router.post('/signup', async (req, res) => {
   // console.log('backend test',req);
-  console.log('req.body',req.body);
-  console.log('req.files',req.files);
-
+  // console.log('req.body',req.body);
+  // console.log('req.files',req.files);
 
   // Vérifier que les champs de saisie ont été remplis correctement --- quid de la photo qui ne serait pas enregistrée tt de suite ?? 
   
@@ -23,24 +25,39 @@ router.post('/signup', (req, res) => {
   }
 
   const {name, firstname, username, email, password, categories} = req.body;
-
   const categoriesArray = categories.split(',')
-  
 
-  console.log("categoriesArray", categoriesArray)
+  //----------------------------------cloudinary post------------------------------------------------------------------//
+  let photo = '../assets/avatar.png'
+
+  if (req.files !== null) {
+    const photoPath = `./tmp/${uniqid()}.jpg`;
+    const resultMove = await req.files.photoFromFront.mv(photoPath);
+    if(!resultMove) {
+      const resultCloudinary = 
+       await cloudinary.uploader.upload(photoPath);
+      photo = resultCloudinary.secure_url
+    } else {
+      // IL FAUDRAIT FAIRE UN TRAITEMENT DES ERREURS
+    }
+    fs.unlinkSync(photoPath);
+
+  }
+
+//----------------------------------------------------------------------------------------------------------------------//
+  // console.log("categoriesArray", categoriesArray)
   // Enregistrement réalisé si pas d'existence de l'email ds la bdd
   User.findOne({email: {$regex : new RegExp(req.body.email, 'i')}}).then(data => {
-    console.log(data)
+    // console.log(data)
     if (data === null) {
+
       const hash = bcrypt.hashSync(password, 10);
 
       // Photo : uri transmis par BE //
-
-      // --------------------------- //
       const newUser = new User({
         name: name,
         firstname : firstname,
-        // photo : req.body.photo,
+        photo : photo,
         username : username,
         email : email,
         token : uid2(32),
@@ -60,6 +77,21 @@ router.post('/signup', (req, res) => {
   })
 
 })
+//-------------------------------------------------- route cloudinary ----------------------------------------------//
+// router.post('/signup', async (req, res) => {
+//   const photoPath = `./tmp/${uniqid()}.jpg`;
+//   const resultMove = await req.files.photoFromFront.mv(photoPath);
+
+//   if(!resultMove) {
+//     const resultCloudinary = 
+//      await cloudinary.uploader.upload(photoPath);
+
+//      res.json({ result: true, url: resultCloudinary.secure_url});
+//   } else {
+//     res.json({ result: false, error: resultMove});
+//   }
+//   fs.unlinkSync(photoPath);
+// })
 
 // ---------------------------------------------- route user/signin ----------------------------------------------
 router.post('/signin', (req, res) => {
