@@ -11,7 +11,7 @@ const typSchema = mongoose.schema ({
     images : String,
     author : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     category : { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
-    coordinates : Number,
+    coordinates : {latitude:Number, longitude:Number},
 })
 
 const Typ = mongoose.model('typs', typSchema);
