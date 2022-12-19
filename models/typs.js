@@ -2,13 +2,14 @@
 
 const mongoose = require('mongoose');
 
-const typSchema = mongoose.schema ({
+const typSchema = mongoose.Schema ({
     title : String,
     city : String,
+    content : String,
     votePlus : String,
     voteMinus : String,
     date : Date,
-    images : String,
+    pictures : [String],
     author : { type: mongoose.Schema.Types.ObjectId, ref: 'users' },
     category : { type: mongoose.Schema.Types.ObjectId, ref: 'categories' },
     coordinates : {latitude:Number, longitude:Number},

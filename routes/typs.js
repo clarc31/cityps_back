@@ -11,8 +11,8 @@ const uniqid = require('uniqid');
 // ---------------------------------------------- route user/signup ----------------------------------------------
 router.post('/', async (req, res) => {
   
-    // Vérifier que les champs de saisie ont été remplis correctement --- quid de la photo qui ne serait pas enregistrée tt de suite ?? 
-    /*if (!checkBody(req.body, ['name','firstname', 'username', 'email', 'password', 'categories'])) {
+    // Vérifier que les champs de saisie ont été remplis correctement  
+    /*if (!checkBody(req.body, ['title','content', 'pictures', 'email', 'password', 'categories'])) {
       res.json({ result: false, error: 'Missing or empty fields' });
       return;
     }*/
@@ -40,19 +40,20 @@ router.post('/', async (req, res) => {
     //- enregistrement dans la BDD
   
         Typ.findOne({content: content}).then(data => {
-
+            const votePlus = 0;
+            const voteMinus = 0;
             if (data === null) {
-
               const newTyp = new Typ({
-                title: name,
+                title: title,
                 city : city,
+                content : content,
                 votePlus : votePlus,
                 voteMinus : voteMinus,
-                dete : Date.now(),
-                images : cloudyData,
+                date : Date.now(),
+                pictures : pictures,
                 author : user_Id,
-                category : category_Id,
-                coordinates : coordinates
+                category : category,
+                coordinates : coordinates,
               });
         
               newTyp.save().then(dataTyp => {
