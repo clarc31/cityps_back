@@ -64,6 +64,20 @@ router.post('/', async (req, res) => {
               res.json({result : false, error: 'Text already exists'});
             }
           })
-    })
+        })
+
+
+  // HOMESCREEN : Créer une route GET "existingTipsbyCity" 
+  // (qui affiche tous les tips dispo sur l'appli toutes categories confondues pour cette ville)
+  
+  router.get("/:city", (req, res) => {
+  Typ.find({ city: req.params.city }).populate('author').then(data => {
+    console.log(data)
+    res.json({ result: true, city: data });
+  });
+  });
+
+  
+
 
 module.exports = router;
