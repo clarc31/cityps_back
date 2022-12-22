@@ -17,16 +17,19 @@ router.post("/", async (req, res) => {
       return;
     }*/
 
-  const { title, city, content, author, coordinates, categories } = req.body;
+  const { title, city, content, author, latitude, longitude, categories } =
+    req.body;
   const categoriesArray = categories.split(",");
+
+  console.log(categoriesArray);
 
   //----------------------------------cloudinary post 3 photos------------------------------------------------------------------//
   // let photo = "../assets/avatar.png"; // photo par défaut-> ?
   const photos = [];
   if (req.files !== null) {
-    for (let i = 0; i < req.files.length; i++) {
+    for (let i = 0; i < req.files.photo.length; i++) {
       const photoPath = `./tmp/${uniqid()}.jpg`;
-      const resultMove = await req.files[i].mv(photoPath);
+      const resultMove = await req.files.photo[i].mv(photoPath);
       if (!resultMove) {
         const resultCloudinary = await cloudinary.uploader.upload(photoPath);
         photos.push(resultCloudinary.secure_url);
@@ -36,7 +39,6 @@ router.post("/", async (req, res) => {
       fs.unlinkSync(photoPath);
     }
   }
-
   //- enregistrement dans la BDD
 
   User.findOne({ token: author }).then((data) => {
@@ -45,10 +47,10 @@ router.post("/", async (req, res) => {
       city,
       content,
       date: Date.now(),
-      pictures,
+      pictures: photos,
       author: data._id,
       category: categoriesArray,
-      coordinates,
+      coordinates: { latitude, longitude },
     });
 
     newTyp.save().then((dataTyp) => {
