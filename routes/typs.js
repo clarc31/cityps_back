@@ -8,7 +8,6 @@ const { checkBody } = require("../modules/checkBody");
 const cloudinary = require("cloudinary").v2;
 const fs = require("fs");
 const uniqid = require("uniqid");
-const { default: user } = require("../../cityps_front/reducers/user");
 
 // ---------------------------------------------- route user/signup ----------------------------------------------
 router.post("/", async (req, res) => {
