@@ -26,12 +26,14 @@ router.post("/", async (req, res) => {
   //----------------------------------cloudinary post 3 photos------------------------------------------------------------------//
   // let photo = "../assets/avatar.png"; // photo par défaut-> ?
   const photos = [];
+  console.log(req.files);
   if (req.files !== null) {
     for (let i = 0; i < req.files.photo.length; i++) {
       const photoPath = `./tmp/${uniqid()}.jpg`;
       const resultMove = await req.files.photo[i].mv(photoPath);
       if (!resultMove) {
         const resultCloudinary = await cloudinary.uploader.upload(photoPath);
+        console.log(resultCloudinary);
         photos.push(resultCloudinary.secure_url);
       } else {
         // Erreur à traiter
